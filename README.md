@@ -1,5 +1,9 @@
 # TRAINS - PyCharm Plugin
 
+
+[![GitHub license](https://img.shields.io/github/license/allegroai/trains-pycharm-plugin.svg)](https://img.shields.io/github/license/allegroai/trains-pycharm-plugin.svg)
+[![GitHub release](https://img.shields.io/github/release-pre/allegroai/trains-pycharm-plugin.svg)](https://img.shields.io/github/release-pre/allegroai/trains-pycharm-plugin.svg)
+
 PyCharm plugin allow syncing of local repo information to remote debugger machine.
 
 ## Usage
@@ -8,7 +12,7 @@ Install latest plugin from [Releases](https://github.com/allegroai/trains-pychar
 
 *Optional*, configure TRAINS host and credentials:
 
-0. With PyCharm
+In PyCharm
 1. Open Settings -> Tools -> TRAINS
 2. Add your TRAINS host (for example: http://localhost:8008)
 3. Add your TRAINS user credentials key/secret
