@@ -1,0 +1,43 @@
+<idea-plugin version="2">
+  <id>com.trains.plugin</id>
+  <name>TRAINS</name>
+  <version>0.1.4</version>
+  <vendor email="git@allegro.ai" url="https://trainsai.io">trainsai.io</vendor>
+
+  <description><![CDATA[
+      The plugin will automatically sync local configuration with remote debugger.
+      <ul>
+      Configure TRAINS credentials:<br/>
+      Open Settings -> Tools -> TRAINS<br/>
+      Add your TRAINS user credentials: key & secret<br/>
+      </ul>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      <ul>
+      <li> 0.1.1 - Initial beta release</li>
+      <li> 0.1.2 - Windows support</li>
+      <li> 0.1.3 - Windows git fix</li>
+      <li> 0.1.4 - Added: TRAINS host configuration</li>
+      </ul>
+      (c) allegro.ai
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="141.0"/>
+  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.python</depends>
+  <depends>com.intellij.modules.platform</depends>
+  <depends>Git4Idea</depends>
+
+  <extensions defaultExtensionNs="Pythonid">
+    <runConfigurationExtension implementation="TrainsRunExtension"/>
+  </extensions>
+  <extensions defaultExtensionNs="com.intellij">
+    <projectConfigurable groupId="tools"
+                         displayName="TRAINS"
+                         instance="HookConfigurable" />
+  </extensions>
+
+</idea-plugin>
