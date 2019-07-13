@@ -117,6 +117,20 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
             cmdLine.withEnvironment("ALG_VCS_STATUS",  Base64.getEncoder().encodeToString(gitStatus.getBytes()));
         if (gitDiff!=null)
             cmdLine.withEnvironment("ALG_VCS_DIFF", Base64.getEncoder().encodeToString(gitDiff.getBytes()));
+
+        Map<String, String>  commands = cmdLine.getEffectiveEnvironment();
+        String effectiveCmdString = "" + commands;
+        // System.out.println("CMD: " + effectiveCmdString);
+        // System.out.println("CMD length: " + effectiveCmdString.length());
+        if (effectiveCmdString.length() >= 128000) {
+            openWarning("warning", String.format("Dropping GIT DIFF! Git diff is too large (%d bytes)",
+                    effectiveCmdString.length()), 5000);
+            cmdLine.withEnvironment("ALG_VCS_DIFF", "");
+
+            // Map<String, String>  reduced_commands = cmdLine.getEffectiveEnvironment();
+            // String reduced_commands_str = "" + reduced_commands;
+            // System.out.println("New CMD length: " + reduced_commands_str.length());
+        }
         project = null;
     }
 
@@ -141,7 +155,7 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
                 proc.destroyForcibly();
                 if (tempFile != null)
                     tempFile.delete();
-                openWarning("warning", String.format("execution timed out: %s", cmd));
+                openWarning("warning", String.format("execution timed out: %s", cmd), 3000);
                 return output;
             }
             if (br==null)
@@ -186,10 +200,10 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
         }
     }
 
-    private void openWarning(final String title, final String message) {
+    private void openWarning(final String title, final String message, final int timeout) {
         JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(
                 "TRAINS " + title + ": " + message, MessageType.WARNING, null
-        ).setFadeoutTime(3000)
+        ).setFadeoutTime(timeout)
                 .createBalloon().show(
                 RelativePoint.getNorthWestOf(WindowManager.getInstance().getStatusBar(project).getComponent()),
                 Balloon.Position.atRight
