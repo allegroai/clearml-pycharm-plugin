@@ -70,8 +70,12 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
             cmdLine.withEnvironment("TRAINS_API_ACCESS_KEY", HookConfigurable.getStoredKey(project));
         if (HookConfigurable.getStoredSecret(project) != null && !HookConfigurable.getStoredSecret(project).isEmpty())
             cmdLine.withEnvironment("TRAINS_API_SECRET_KEY", HookConfigurable.getStoredSecret(project));
-        if (HookConfigurable.getStoredHost(project) != null && !HookConfigurable.getStoredHost(project).isEmpty())
-            cmdLine.withEnvironment("TRAINS_API_HOST", HookConfigurable.getStoredHost(project));
+        if (HookConfigurable.getStoredAPI(project) != null && !HookConfigurable.getStoredAPI(project).isEmpty())
+            cmdLine.withEnvironment("TRAINS_API_HOST", HookConfigurable.getStoredAPI(project));
+        if (HookConfigurable.getStoredWEB(project) != null && !HookConfigurable.getStoredWEB(project).isEmpty())
+            cmdLine.withEnvironment("TRAINS_WEB_HOST", HookConfigurable.getStoredWEB(project));
+        if (HookConfigurable.getStoredFILES(project) != null && !HookConfigurable.getStoredFILES(project).isEmpty())
+            cmdLine.withEnvironment("TRAINS_FILES_HOST", HookConfigurable.getStoredFILES(project));
 
         String git = null;
         // first try new API

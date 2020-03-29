@@ -15,14 +15,20 @@ import java.awt.*;
 
 public class HookConfigurable implements Configurable {
 
-    private static final String PATH_HOST = "trains.host";
+    private static final String PATH_API = "trains.host";
+    private static final String PATH_WEB = "trains.web";
+    private static final String PATH_FILES = "trains.files";
     private static final String PATH_KEY = "trains.key";
     private static final String PATH_SECRET = "trains.secret";
 
-    private JTextField userHost;
+    private JTextField userAPI;
+    private JTextField userWEB;
+    private JTextField userFILES;
     private JTextField userKey;
     private JTextField userSecret;
-    private static String storedHost = null;
+    private static String storedAPI = null;
+    private static String storedWEB = null;
+    private static String storedFILES = null;
     private static String storedKey = null;
     private static String storedSecret = null;
 
@@ -30,7 +36,7 @@ public class HookConfigurable implements Configurable {
 
     public HookConfigurable(Project project) {
         this.project = project;
-        if (storedHost == null || storedSecret == null || storedKey==null) {
+        if (storedFILES == null || storedWEB == null || storedAPI == null || storedSecret == null || storedKey==null) {
             loadFromProperties(project);
         }
     }
@@ -39,7 +45,9 @@ public class HookConfigurable implements Configurable {
         PropertiesComponent properties = PropertiesComponent.getInstance(project);
         storedKey = properties.getValue(PATH_KEY);
         storedSecret = properties.getValue(PATH_SECRET);
-        storedHost = properties.getValue(PATH_HOST);
+        storedAPI = properties.getValue(PATH_API);
+        storedWEB = properties.getValue(PATH_WEB);
+        storedFILES = properties.getValue(PATH_FILES);
     }
 
     @Nls
@@ -57,32 +65,68 @@ public class HookConfigurable implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        userHost = new JTextField();
+        userAPI = new JTextField();
+        userWEB = new JTextField();
+        userFILES = new JTextField();
         userKey = new JTextField();
         userSecret = new JTextField();
 
-        JPanel container = new JPanel(new GridLayoutManager(4, 2,
+        JPanel container = new JPanel(new GridLayoutManager(6, 2,
                 new Insets(0, 0, 0, 0), 12, 12));
 
-        GridConstraints pathLabelConstraint0 = new GridConstraints();
-        pathLabelConstraint0.setRow(0);
-        pathLabelConstraint0.setColumn(0);
-        pathLabelConstraint0.setFill(GridConstraints.FILL_HORIZONTAL);
-        pathLabelConstraint0.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
-        container.add(new JLabel("TRAINS server: "), pathLabelConstraint0);
+        GridConstraints pathLabelConstraint0a = new GridConstraints();
+        pathLabelConstraint0a.setRow(0);
+        pathLabelConstraint0a.setColumn(0);
+        pathLabelConstraint0a.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathLabelConstraint0a.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(new JLabel("TRAINS Web server: "), pathLabelConstraint0a);
 
-        GridConstraints pathFieldConstraint0 = new GridConstraints();
-        pathFieldConstraint0.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
-        pathFieldConstraint0.setFill(GridConstraints.FILL_HORIZONTAL);
-        pathFieldConstraint0.setAnchor(GridConstraints.ANCHOR_WEST);
-        pathFieldConstraint0.setRow(0);
-        pathFieldConstraint0.setColumn(1);
-        pathFieldConstraint0.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
-        container.add(userHost, pathFieldConstraint0);
+        GridConstraints pathFieldConstraint0a = new GridConstraints();
+        pathFieldConstraint0a.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
+        pathFieldConstraint0a.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathFieldConstraint0a.setAnchor(GridConstraints.ANCHOR_WEST);
+        pathFieldConstraint0a.setRow(0);
+        pathFieldConstraint0a.setColumn(1);
+        pathFieldConstraint0a.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(userWEB, pathFieldConstraint0a);
+
+
+        GridConstraints pathLabelConstraint0b = new GridConstraints();
+        pathLabelConstraint0b.setRow(1);
+        pathLabelConstraint0b.setColumn(0);
+        pathLabelConstraint0b.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathLabelConstraint0b.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(new JLabel("TRAINS API server: "), pathLabelConstraint0b);
+
+        GridConstraints pathFieldConstraint0b = new GridConstraints();
+        pathFieldConstraint0b.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
+        pathFieldConstraint0b.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathFieldConstraint0b.setAnchor(GridConstraints.ANCHOR_WEST);
+        pathFieldConstraint0b.setRow(1);
+        pathFieldConstraint0b.setColumn(1);
+        pathFieldConstraint0b.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(userAPI, pathFieldConstraint0b);
+
+
+        GridConstraints pathLabelConstraint0c = new GridConstraints();
+        pathLabelConstraint0c.setRow(2);
+        pathLabelConstraint0c.setColumn(0);
+        pathLabelConstraint0c.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathLabelConstraint0c.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(new JLabel("TRAINS File server: "), pathLabelConstraint0c);
+
+        GridConstraints pathFieldConstraint0c = new GridConstraints();
+        pathFieldConstraint0c.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
+        pathFieldConstraint0c.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathFieldConstraint0c.setAnchor(GridConstraints.ANCHOR_WEST);
+        pathFieldConstraint0c.setRow(2);
+        pathFieldConstraint0c.setColumn(1);
+        pathFieldConstraint0c.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(userFILES, pathFieldConstraint0c);
 
 
         GridConstraints pathLabelConstraint = new GridConstraints();
-        pathLabelConstraint.setRow(1);
+        pathLabelConstraint.setRow(3);
         pathLabelConstraint.setColumn(0);
         pathLabelConstraint.setFill(GridConstraints.FILL_HORIZONTAL);
         pathLabelConstraint.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
@@ -92,14 +136,14 @@ public class HookConfigurable implements Configurable {
         pathFieldConstraint.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
         pathFieldConstraint.setFill(GridConstraints.FILL_HORIZONTAL);
         pathFieldConstraint.setAnchor(GridConstraints.ANCHOR_WEST);
-        pathFieldConstraint.setRow(1);
+        pathFieldConstraint.setRow(3);
         pathFieldConstraint.setColumn(1);
         pathFieldConstraint.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
         container.add(userKey, pathFieldConstraint);
 
 
         GridConstraints pathLabelConstraint2 = new GridConstraints();
-        pathLabelConstraint2.setRow(2);
+        pathLabelConstraint2.setRow(4);
         pathLabelConstraint2.setColumn(0);
         pathLabelConstraint2.setFill(GridConstraints.FILL_HORIZONTAL);
         pathLabelConstraint2.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
@@ -109,7 +153,7 @@ public class HookConfigurable implements Configurable {
         pathFieldConstraint2.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
         pathFieldConstraint2.setFill(GridConstraints.FILL_HORIZONTAL);
         pathFieldConstraint2.setAnchor(GridConstraints.ANCHOR_WEST);
-        pathFieldConstraint2.setRow(2);
+        pathFieldConstraint2.setRow(4);
         pathFieldConstraint2.setColumn(1);
         pathFieldConstraint2.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
         container.add(userSecret, pathFieldConstraint2);
@@ -117,7 +161,7 @@ public class HookConfigurable implements Configurable {
 
         JPanel spacer = new JPanel();
         GridConstraints spacerConstraints = new GridConstraints();
-        spacerConstraints.setRow(3);
+        spacerConstraints.setRow(5);
         spacerConstraints.setFill(GridConstraints.FILL_BOTH);
         container.add(spacer, spacerConstraints);
 
@@ -134,30 +178,50 @@ public class HookConfigurable implements Configurable {
             return true;
         }
 
-        if (storedHost == null && userHost != null) {
+        if (storedAPI == null && userAPI != null) {
+            return true;
+        }
+
+        if (storedWEB == null && userWEB != null) {
+            return true;
+        }
+
+        if (storedFILES == null && userFILES != null) {
             return true;
         }
 
         return !storedKey.equals(userKey.getText()) || !storedSecret.equals(userSecret.getText())
-                || !storedHost.equals(userHost.getText());
+                || !storedAPI.equals(userAPI.getText())
+                || !storedWEB.equals(userWEB.getText())
+                || !storedFILES.equals(userFILES.getText());
     }
 
     @Override
     public void apply() throws ConfigurationException {
         storedKey = userKey.getText().trim();
         storedSecret = userSecret.getText().trim();
-        storedHost = userHost.getText().trim();
+        storedAPI = fixHost(userAPI.getText().trim());
+        storedWEB = fixHost(userWEB.getText().trim());
+        storedFILES = fixHost(userFILES.getText().trim());
 
         PropertiesComponent properties = PropertiesComponent.getInstance(project);
-        properties.setValue(PATH_HOST, storedHost);
+        properties.setValue(PATH_API, storedAPI);
+        properties.setValue(PATH_WEB, storedWEB);
+        properties.setValue(PATH_FILES, storedFILES);
         properties.setValue(PATH_KEY, storedKey);
         properties.setValue(PATH_SECRET, storedSecret);
     }
 
     @Override
     public void reset() {
-        if (userHost != null) {
-            userHost.setText(storedHost);
+        if (userAPI != null) {
+            userAPI.setText(storedAPI);
+        }
+        if (userWEB != null) {
+            userWEB.setText(storedWEB);
+        }
+        if (userFILES != null) {
+            userFILES.setText(storedFILES);
         }
         if (userKey != null) {
             userKey.setText(storedKey);
@@ -171,7 +235,15 @@ public class HookConfigurable implements Configurable {
     public void disposeUIResources() {
         userKey = null;
         userSecret = null;
-        userHost = null;
+        userAPI = null;
+        userWEB = null;
+        userFILES = null;
+    }
+
+    static String fixHost(String host) {
+        if (!host.isEmpty() && !(host.startsWith("http://") || host.startsWith("https://")))
+            return "http://"+host;
+        return host;
     }
 
     static String getStoredKey(Project project) {
@@ -188,10 +260,24 @@ public class HookConfigurable implements Configurable {
         return storedSecret;
     }
 
-    static String getStoredHost(Project project) {
-        if (storedHost==null && project!=null){
+    static String getStoredAPI(Project project) {
+        if (storedAPI==null && project!=null){
             loadFromProperties(project);
         }
-        return storedHost;
+        return storedAPI;
+    }
+
+    static String getStoredWEB(Project project) {
+        if (storedWEB==null && project!=null){
+            loadFromProperties(project);
+        }
+        return storedWEB;
+    }
+
+    static String getStoredFILES(Project project) {
+        if (storedFILES==null && project!=null){
+            loadFromProperties(project);
+        }
+        return storedFILES;
     }
 }
