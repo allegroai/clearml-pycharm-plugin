@@ -1,8 +1,8 @@
-<idea-plugin version="2">
+<idea-plugin url="https://github.com/allegroai/trains-pycharm-plugin">
   <id>com.trains.plugin</id>
   <name>TRAINS</name>
-  <version>0.1.5</version>
-  <vendor email="git@allegro.ai" url="https://trainsai.io">trainsai.io</vendor>
+  <version>0.1.6</version>
+  <vendor url="https://allegro.ai" email="trains@allegro.ai">allegro.ai</vendor>
 
   <description><![CDATA[
       The plugin will automatically sync local configuration with remote debugger.
@@ -20,6 +20,7 @@
       <li> 0.1.3 - Windows git fix</li>
       <li> 0.1.4 - Added: TRAINS host configuration</li>
       <li> 0.1.5 - Limit git diff size (OS environment size limitation 128kb)</li>
+      <li> 0.1.6 - Improve Git Diff detection and update support for Trains>=0.14.1</li>
       </ul>
       (c) allegro.ai
     ]]>
