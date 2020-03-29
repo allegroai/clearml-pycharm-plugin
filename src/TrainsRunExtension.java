@@ -23,6 +23,7 @@ import git4idea.config.GitVcsApplicationSettings;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -66,11 +67,11 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
         // Reference: org.python.pydev.debug.profile.PyProfilePreferences.addProfileArgs(List<String>, boolean, boolean)
         project = configuration.getProject();
         if (HookConfigurable.getStoredKey(project) != null && !HookConfigurable.getStoredKey(project).isEmpty())
-            cmdLine.withEnvironment("ALG_API_ACCESS_KEY", HookConfigurable.getStoredKey(project));
+            cmdLine.withEnvironment("TRAINS_API_ACCESS_KEY", HookConfigurable.getStoredKey(project));
         if (HookConfigurable.getStoredSecret(project) != null && !HookConfigurable.getStoredSecret(project).isEmpty())
-            cmdLine.withEnvironment("ALG_API_SECRET_KEY", HookConfigurable.getStoredSecret(project));
+            cmdLine.withEnvironment("TRAINS_API_SECRET_KEY", HookConfigurable.getStoredSecret(project));
         if (HookConfigurable.getStoredHost(project) != null && !HookConfigurable.getStoredHost(project).isEmpty())
-            cmdLine.withEnvironment("ALG_API_HOST", HookConfigurable.getStoredHost(project));
+            cmdLine.withEnvironment("TRAINS_API_HOST", HookConfigurable.getStoredHost(project));
 
         String git = null;
         // first try new API
@@ -95,28 +96,34 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
         if (OsUtil.isWindows) {
             git = String.format("\"%s\"", git);
         }
-        String path = project.getBasePath();
+        // String path = project.getBasePath();
+        String path = configuration.getWorkingDirectory();
 
-        String gitRepo = runCommand(git + " remote get-url origin", path, false);
+        String gitRepo = runCommand(git + " ls-remote --get-url origin", path, false);
         String gitBranch = runCommand(git + " rev-parse --abbrev-ref --symbolic-full-name @{u}", path, false);
         String gitCommit = runCommand(git + " rev-parse HEAD", path, false);
         String gitRoot = runCommand(git + " rev-parse --show-toplevel", path, false);
         String gitStatus = runCommand(git + " status -s", path, false);
-        String gitDiff = runCommand(git + " diff", path, true);
+        String gitDiff = runCommand(git + " diff --no-color", path, true);
         if (gitRepo!=null)
-            cmdLine.withEnvironment("ALG_VCS_REPO_URL", gitRepo);
+            cmdLine.withEnvironment("TRAINS_VCS_REPO_URL", gitRepo);
         if (gitBranch!=null)
-            cmdLine.withEnvironment("ALG_VCS_BRANCH", gitBranch);
+            cmdLine.withEnvironment("TRAINS_VCS_BRANCH", gitBranch);
         if (gitCommit!=null)
-            cmdLine.withEnvironment("ALG_VCS_COMMIT_ID", gitCommit);
+            cmdLine.withEnvironment("TRAINS_VCS_COMMIT_ID", gitCommit);
         if (gitRoot!=null) {
-            String root = configuration.getWorkingDirectory().replace(gitRoot, ".");
-            cmdLine.withEnvironment("ALG_VCS_ROOT", root.isEmpty() ? "." : root);
+            String relRool = ".";
+            try {
+                relRool = Paths.get(configuration.getWorkingDirectory()).relativize(Paths.get(gitRoot)).toString();
+            } catch (Throwable t) {
+                // We cannot resolve it, assume same folder.
+            }
+            cmdLine.withEnvironment("TRAINS_VCS_ROOT", relRool);
         }
         if (gitStatus!=null)
-            cmdLine.withEnvironment("ALG_VCS_STATUS",  Base64.getEncoder().encodeToString(gitStatus.getBytes()));
+            cmdLine.withEnvironment("TRAINS_VCS_STATUS",  Base64.getEncoder().encodeToString(gitStatus.getBytes()));
         if (gitDiff!=null)
-            cmdLine.withEnvironment("ALG_VCS_DIFF", Base64.getEncoder().encodeToString(gitDiff.getBytes()));
+            cmdLine.withEnvironment("TRAINS_VCS_DIFF", Base64.getEncoder().encodeToString(gitDiff.getBytes()));
 
         Map<String, String>  commands = cmdLine.getEffectiveEnvironment();
         String effectiveCmdString = "" + commands;
@@ -125,7 +132,7 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
         if (effectiveCmdString.length() >= 128000) {
             openWarning("warning", String.format("Dropping GIT DIFF! Git diff is too large (%d bytes)",
                     effectiveCmdString.length()), 5000);
-            cmdLine.withEnvironment("ALG_VCS_DIFF", "");
+            cmdLine.withEnvironment("TRAINS_VCS_DIFF", "");
 
             // Map<String, String>  reduced_commands = cmdLine.getEffectiveEnvironment();
             // String reduced_commands_str = "" + reduced_commands;
@@ -178,8 +185,9 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
             }
             // System.out.println("</OUTPUT>");
             // System.out.println("Process exitValue: " + exitVal);
-            if (tempFile != null)
+            if (tempFile != null) {
                 tempFile.delete();
+            }
         }
         catch (Throwable t)
         {
