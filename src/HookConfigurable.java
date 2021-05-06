@@ -15,11 +15,11 @@ import java.awt.*;
 
 public class HookConfigurable implements Configurable {
 
-    private static final String PATH_API = "trains.host";
-    private static final String PATH_WEB = "trains.web";
-    private static final String PATH_FILES = "trains.files";
-    private static final String PATH_KEY = "trains.key";
-    private static final String PATH_SECRET = "trains.secret";
+    private static final String PATH_API = "clearml.host";
+    private static final String PATH_WEB = "clearml.web";
+    private static final String PATH_FILES = "clearml.files";
+    private static final String PATH_KEY = "clearml.key";
+    private static final String PATH_SECRET = "clearml.secret";
 
     private JTextField userAPI;
     private JTextField userWEB;
@@ -53,7 +53,7 @@ public class HookConfigurable implements Configurable {
     @Nls
     @Override
     public String getDisplayName() {
-        return "TRAINS";
+        return "ClearML";
     }
 
     @Nullable
@@ -79,7 +79,7 @@ public class HookConfigurable implements Configurable {
         pathLabelConstraint0a.setColumn(0);
         pathLabelConstraint0a.setFill(GridConstraints.FILL_HORIZONTAL);
         pathLabelConstraint0a.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
-        container.add(new JLabel("TRAINS Web server: "), pathLabelConstraint0a);
+        container.add(new JLabel("ClearML Web server: "), pathLabelConstraint0a);
 
         GridConstraints pathFieldConstraint0a = new GridConstraints();
         pathFieldConstraint0a.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
@@ -96,7 +96,7 @@ public class HookConfigurable implements Configurable {
         pathLabelConstraint0b.setColumn(0);
         pathLabelConstraint0b.setFill(GridConstraints.FILL_HORIZONTAL);
         pathLabelConstraint0b.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
-        container.add(new JLabel("TRAINS API server: "), pathLabelConstraint0b);
+        container.add(new JLabel("ClearML API server: "), pathLabelConstraint0b);
 
         GridConstraints pathFieldConstraint0b = new GridConstraints();
         pathFieldConstraint0b.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
@@ -113,7 +113,7 @@ public class HookConfigurable implements Configurable {
         pathLabelConstraint0c.setColumn(0);
         pathLabelConstraint0c.setFill(GridConstraints.FILL_HORIZONTAL);
         pathLabelConstraint0c.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
-        container.add(new JLabel("TRAINS File server: "), pathLabelConstraint0c);
+        container.add(new JLabel("ClearML File server: "), pathLabelConstraint0c);
 
         GridConstraints pathFieldConstraint0c = new GridConstraints();
         pathFieldConstraint0c.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);

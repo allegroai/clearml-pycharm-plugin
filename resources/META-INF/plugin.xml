@@ -1,15 +1,15 @@
-<idea-plugin url="https://github.com/allegroai/trains-pycharm-plugin">
-  <id>com.trains.plugin</id>
-  <name>TRAINS</name>
-  <version>0.1.7</version>
-  <vendor url="https://allegro.ai" email="trains@allegro.ai">allegro.ai</vendor>
+<idea-plugin url="https://github.com/allegroai/clearml-pycharm-plugin">
+  <id>com.clearml.plugin</id>
+  <name>ClearML</name>
+  <version>1.0.0</version>
+  <vendor url="https://clear.ml" email="support@clear.ml">clear.ml</vendor>
 
   <description><![CDATA[
       The plugin will automatically sync local configuration with remote debugger.
       <ul>
-      Configure TRAINS credentials:<br/>
-      Open Settings -> Tools -> TRAINS<br/>
-      Add your TRAINS user credentials: key & secret<br/>
+      Configure ClearML credentials:<br/>
+      Open Settings -> Tools -> ClearML<br/>
+      Add your ClearML user credentials: key & secret<br/>
       </ul>
     ]]></description>
 
@@ -22,6 +22,7 @@
       <li> 0.1.5 - Limit git diff size (OS environment size limitation 128kb)</li>
       <li> 0.1.6 - Improve Git Diff detection and update support for Trains>=0.14.1</li>
       <li> 0.1.7 - Add TRAINS server Web/Api/File specific configuration</li>
+      <li> 1.0.0 - ClearML release with PyCHarm 2021 support</li>
       </ul>
       (c) allegro.ai
     ]]>
@@ -35,11 +36,11 @@
   <depends>Git4Idea</depends>
 
   <extensions defaultExtensionNs="Pythonid">
-    <runConfigurationExtension implementation="TrainsRunExtension"/>
+    <runConfigurationExtension implementation="ClearMLRunExtension"/>
   </extensions>
   <extensions defaultExtensionNs="com.intellij">
     <projectConfigurable groupId="tools"
-                         displayName="TRAINS"
+                         displayName="ClearML"
                          instance="HookConfigurable" />
   </extensions>
 

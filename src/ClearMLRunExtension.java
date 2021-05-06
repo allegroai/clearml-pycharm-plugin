@@ -11,15 +11,16 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
+import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import git4idea.config.GitVcsApplicationSettings;
+
 // import com.jetbrains.python.debugger.PyDebugRunner;
 import com.jetbrains.python.run.AbstractPythonRunConfiguration;
 // import com.jetbrains.python.run.PythonCommandLineState;
 // import com.jetbrains.python.run.PythonRunConfiguration;
 import com.jetbrains.python.run.PythonRunConfigurationExtension;
-import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import git4idea.config.GitVcsApplicationSettings;
 
 import javax.swing.*;
 import java.io.*;
@@ -28,7 +29,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
-public class TrainsRunExtension extends PythonRunConfigurationExtension {
+public class ClearMLRunExtension extends PythonRunConfigurationExtension {
     private Project project = null;
 
     @Override
@@ -48,7 +49,7 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
     @Nullable
     @Override
     protected String getEditorTitle() {
-        return "TRAINS (configuration)";
+        return "ClearML (configuration)";
     }
 
     @Override
@@ -67,15 +68,15 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
         // Reference: org.python.pydev.debug.profile.PyProfilePreferences.addProfileArgs(List<String>, boolean, boolean)
         project = configuration.getProject();
         if (HookConfigurable.getStoredKey(project) != null && !HookConfigurable.getStoredKey(project).isEmpty())
-            cmdLine.withEnvironment("TRAINS_API_ACCESS_KEY", HookConfigurable.getStoredKey(project));
+            cmdLine.withEnvironment("CLEARML_API_ACCESS_KEY", HookConfigurable.getStoredKey(project));
         if (HookConfigurable.getStoredSecret(project) != null && !HookConfigurable.getStoredSecret(project).isEmpty())
-            cmdLine.withEnvironment("TRAINS_API_SECRET_KEY", HookConfigurable.getStoredSecret(project));
+            cmdLine.withEnvironment("CLEARML_API_SECRET_KEY", HookConfigurable.getStoredSecret(project));
         if (HookConfigurable.getStoredAPI(project) != null && !HookConfigurable.getStoredAPI(project).isEmpty())
-            cmdLine.withEnvironment("TRAINS_API_HOST", HookConfigurable.getStoredAPI(project));
+            cmdLine.withEnvironment("CLEARML_API_HOST", HookConfigurable.getStoredAPI(project));
         if (HookConfigurable.getStoredWEB(project) != null && !HookConfigurable.getStoredWEB(project).isEmpty())
-            cmdLine.withEnvironment("TRAINS_WEB_HOST", HookConfigurable.getStoredWEB(project));
+            cmdLine.withEnvironment("CLEARML_WEB_HOST", HookConfigurable.getStoredWEB(project));
         if (HookConfigurable.getStoredFILES(project) != null && !HookConfigurable.getStoredFILES(project).isEmpty())
-            cmdLine.withEnvironment("TRAINS_FILES_HOST", HookConfigurable.getStoredFILES(project));
+            cmdLine.withEnvironment("CLEARML_FILES_HOST", HookConfigurable.getStoredFILES(project));
 
         String git = null;
         // first try new API
@@ -110,11 +111,11 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
         String gitStatus = runCommand(git + " status -s", path, false);
         String gitDiff = runCommand(git + " diff --no-color", path, true);
         if (gitRepo!=null)
-            cmdLine.withEnvironment("TRAINS_VCS_REPO_URL", gitRepo);
+            cmdLine.withEnvironment("CLEARML_VCS_REPO_URL", gitRepo);
         if (gitBranch!=null)
-            cmdLine.withEnvironment("TRAINS_VCS_BRANCH", gitBranch);
+            cmdLine.withEnvironment("CLEARML_VCS_BRANCH", gitBranch);
         if (gitCommit!=null)
-            cmdLine.withEnvironment("TRAINS_VCS_COMMIT_ID", gitCommit);
+            cmdLine.withEnvironment("CLEARML_VCS_COMMIT_ID", gitCommit);
         if (gitRoot!=null) {
             String relRool = ".";
             try {
@@ -122,12 +123,12 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
             } catch (Throwable t) {
                 // We cannot resolve it, assume same folder.
             }
-            cmdLine.withEnvironment("TRAINS_VCS_ROOT", relRool);
+            cmdLine.withEnvironment("CLEARML_VCS_ROOT", relRool);
         }
         if (gitStatus!=null)
-            cmdLine.withEnvironment("TRAINS_VCS_STATUS",  Base64.getEncoder().encodeToString(gitStatus.getBytes()));
+            cmdLine.withEnvironment("CLEARML_VCS_STATUS",  Base64.getEncoder().encodeToString(gitStatus.getBytes()));
         if (gitDiff!=null)
-            cmdLine.withEnvironment("TRAINS_VCS_DIFF", Base64.getEncoder().encodeToString(gitDiff.getBytes()));
+            cmdLine.withEnvironment("CLEARML_VCS_DIFF", Base64.getEncoder().encodeToString(gitDiff.getBytes()));
 
         Map<String, String>  commands = cmdLine.getEffectiveEnvironment();
         String effectiveCmdString = "" + commands;
@@ -136,7 +137,7 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
         if (effectiveCmdString.length() >= 128000) {
             openWarning("warning", String.format("Dropping GIT DIFF! Git diff is too large (%d bytes)",
                     effectiveCmdString.length()), 5000);
-            cmdLine.withEnvironment("TRAINS_VCS_DIFF", "");
+            cmdLine.withEnvironment("CLEARML_VCS_DIFF", "");
 
             // Map<String, String>  reduced_commands = cmdLine.getEffectiveEnvironment();
             // String reduced_commands_str = "" + reduced_commands;
@@ -151,7 +152,7 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
         try
         {
             if (useTempFile){
-                tempFile = File.createTempFile(".trains_git_diff", ".txt");
+                tempFile = File.createTempFile(".clearml_git_diff", ".txt");
                 cmd += " > " + tempFile.getAbsolutePath();
             }
             String[] fullCommand = getCommand(cmd);
@@ -162,7 +163,7 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
                 InputStreamReader isr = new InputStreamReader(stdin);
                 br = new BufferedReader(isr);
             }
-            if (!proc.waitFor(5, TimeUnit.SECONDS)) {
+            if (!proc.waitFor(15, TimeUnit.SECONDS)) {
                 proc.destroyForcibly();
                 if (tempFile != null)
                     tempFile.delete();
@@ -214,7 +215,7 @@ public class TrainsRunExtension extends PythonRunConfigurationExtension {
 
     private void openWarning(final String title, final String message, final int timeout) {
         JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(
-                "TRAINS " + title + ": " + message, MessageType.WARNING, null
+                "ClearML " + title + ": " + message, MessageType.WARNING, null
         ).setFadeoutTime(timeout)
                 .createBalloon().show(
                 RelativePoint.getNorthWestOf(WindowManager.getInstance().getStatusBar(project).getComponent()),
