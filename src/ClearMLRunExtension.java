@@ -104,11 +104,18 @@ public class ClearMLRunExtension extends PythonRunConfigurationExtension {
         // String path = project.getBasePath();
         String path = configuration.getWorkingDirectory();
 
+        // first make sure we have a git repository
+        String gitStatus = runCommand(git + " status -s", path, false);
+        if (gitStatus==null){
+            project = null;
+            return;
+        }
+
+
         String gitRepo = runCommand(git + " ls-remote --get-url origin", path, false);
         String gitBranch = runCommand(git + " rev-parse --abbrev-ref --symbolic-full-name @{u}", path, false);
         String gitCommit = runCommand(git + " rev-parse HEAD", path, false);
         String gitRoot = runCommand(git + " rev-parse --show-toplevel", path, false);
-        String gitStatus = runCommand(git + " status -s", path, false);
         String gitDiff = runCommand(git + " diff --no-color", path, true);
         if (gitRepo!=null)
             cmdLine.withEnvironment("CLEARML_VCS_REPO_URL", gitRepo);
