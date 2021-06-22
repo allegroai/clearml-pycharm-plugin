@@ -38,13 +38,13 @@ The **ClearML PyCharm plugin** enables syncing local execution configuration to 
 
 ## Additional Documentation
 
-For detailed information about the **ClearML** open source suite, see our [ClearML Documentation](https://allegro.ai/clearml/docs).
+For detailed information about the **ClearML** open source suite, see our [ClearML Documentation](https://clear.ml/docs).
 
 ## Community & Support
 
-* If you have a question, consult our **ClearML** [FAQs](https://allegro.ai/docs/faq/faq) or tag your questions on [stackoverflow](https://stackoverflow.com/questions/tagged/clearml) with "*clearml*".
+* If you have a question, consult our **ClearML** [FAQs](https://clear.ml/docs/latest/docs/faq) or tag your questions on [stackoverflow](https://stackoverflow.com/questions/tagged/clearml) with "*clearml*".
 * To request features or report bugs, see our [GitHub issues](https://github.com/allegroai/clearml-pycharm-plugin/issues).
-* Email us at *[support@clear.ml](mailto:support@clear.ml?subject=ClearML PyCharm Plugin)*
+* Email us at *[support@clear.ml](mailto:support@clear.ml?subject=ClearML%20PyCharm%20Plugin)*
 
 ## Contributing
 
