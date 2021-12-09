@@ -1,7 +1,7 @@
 <idea-plugin url="https://github.com/allegroai/clearml-pycharm-plugin">
   <id>com.clearml.plugin</id>
   <name>ClearML</name>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <vendor url="https://clear.ml" email="support@clear.ml">clear.ml</vendor>
 
   <description><![CDATA[
@@ -24,6 +24,7 @@
       <li> 0.1.7 - Add TRAINS server Web/Api/File specific configuration</li>
       <li> 1.0.0 - ClearML release with PyCharm 2021 support</li>
       <li> 1.0.1 - Fix no git repository detection</li>
+      <li> 1.0.2 - Fix partial remote sync causing incorrect working directory (requires clearml>=1.1.5)</li>
       </ul>
       (c) allegro.ai
     ]]>
