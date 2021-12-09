@@ -131,6 +131,13 @@ public class ClearMLRunExtension extends PythonRunConfigurationExtension {
                 // We cannot resolve it, assume same folder.
             }
             cmdLine.withEnvironment("CLEARML_VCS_ROOT", relRool);
+
+            try {
+                String workDir = Paths.get(gitRoot).relativize(Paths.get(configuration.getWorkingDirectory())).toString();
+                cmdLine.withEnvironment("CLEARML_VCS_WORK_DIR", workDir);
+            } catch (Throwable t) {
+                // We cannot resolve it, assume same folder.
+            }
         }
         if (gitStatus!=null)
             cmdLine.withEnvironment("CLEARML_VCS_STATUS",  Base64.getEncoder().encodeToString(gitStatus.getBytes()));
