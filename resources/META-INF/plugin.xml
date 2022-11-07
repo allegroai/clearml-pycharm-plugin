@@ -1,7 +1,7 @@
 <idea-plugin url="https://github.com/allegroai/clearml-pycharm-plugin">
   <id>com.clearml.plugin</id>
   <name>ClearML</name>
-  <version>1.0.2</version>
+  <version>1.1.0</version>
   <vendor url="https://clear.ml" email="support@clear.ml">clear.ml</vendor>
 
   <description><![CDATA[
@@ -25,13 +25,16 @@
       <li> 1.0.0 - ClearML release with PyCharm 2021 support</li>
       <li> 1.0.1 - Fix no git repository detection</li>
       <li> 1.0.2 - Fix partial remote sync causing incorrect working directory (requires clearml>=1.1.5)</li>
+      <li> 1.1.0 - Add Pycharm 2022 Support
+                  Add disable SSL certificate verification option<
+                  Add disable local git detection (run git detection in remote session instead of local session)</li>
       </ul>
-      (c) allegro.ai
+      (c) clear.ml
     ]]>
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="141.0"/>
+  <idea-version since-build="201.0"/>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.python</depends>
   <depends>com.intellij.modules.platform</depends>
@@ -39,6 +42,7 @@
 
   <extensions defaultExtensionNs="Pythonid">
     <runConfigurationExtension implementation="ClearMLRunExtension"/>
+    <pythonCommandLineTargetEnvironmentProvider implementation="ClearMLPycharmEnvironmentProvider"/>
   </extensions>
   <extensions defaultExtensionNs="com.intellij">
     <projectConfigurable groupId="tools"

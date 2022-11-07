@@ -20,23 +20,32 @@ public class HookConfigurable implements Configurable {
     private static final String PATH_FILES = "clearml.files";
     private static final String PATH_KEY = "clearml.key";
     private static final String PATH_SECRET = "clearml.secret";
+    private static final String PATH_DISABLE_VERIFY = "clearml.disable_verify";
+
+    private static final String PATH_DISABLE_GIT = "clearml.disable_git";
 
     private JTextField userAPI;
     private JTextField userWEB;
     private JTextField userFILES;
     private JTextField userKey;
     private JTextField userSecret;
+    private JCheckBox userDisableSSLVerify;
+    private JCheckBox userDisableGIT;
+
     private static String storedAPI = null;
     private static String storedWEB = null;
     private static String storedFILES = null;
     private static String storedKey = null;
     private static String storedSecret = null;
+    private static Boolean storedDisableVerify = null;
+    private static Boolean storedDisableGit = null;
 
     private final Project project;
 
     public HookConfigurable(Project project) {
         this.project = project;
-        if (storedFILES == null || storedWEB == null || storedAPI == null || storedSecret == null || storedKey==null) {
+        if (storedFILES == null || storedWEB == null || storedAPI == null || storedSecret == null
+                || storedKey==null || storedDisableVerify==null || storedDisableGit==null) {
             loadFromProperties(project);
         }
     }
@@ -48,6 +57,16 @@ public class HookConfigurable implements Configurable {
         storedAPI = properties.getValue(PATH_API);
         storedWEB = properties.getValue(PATH_WEB);
         storedFILES = properties.getValue(PATH_FILES);
+        if (properties.getValue(PATH_DISABLE_VERIFY) != null) {
+            storedDisableVerify = properties.getValue(PATH_DISABLE_VERIFY).toLowerCase().equals("true");
+        } else{
+            storedDisableVerify = false;
+        }
+        if (properties.getValue(PATH_DISABLE_GIT) != null) {
+            storedDisableGit = properties.getValue(PATH_DISABLE_GIT).toLowerCase().equals("true");
+        } else{
+            storedDisableGit = false;
+        }
     }
 
     @Nls
@@ -70,8 +89,10 @@ public class HookConfigurable implements Configurable {
         userFILES = new JTextField();
         userKey = new JTextField();
         userSecret = new JTextField();
+        userDisableSSLVerify = new JCheckBox();
+        userDisableGIT = new JCheckBox();
 
-        JPanel container = new JPanel(new GridLayoutManager(6, 2,
+        JPanel container = new JPanel(new GridLayoutManager(8, 2,
                 new Insets(0, 0, 0, 0), 12, 12));
 
         GridConstraints pathLabelConstraint0a = new GridConstraints();
@@ -130,7 +151,7 @@ public class HookConfigurable implements Configurable {
         pathLabelConstraint.setColumn(0);
         pathLabelConstraint.setFill(GridConstraints.FILL_HORIZONTAL);
         pathLabelConstraint.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
-        container.add(new JLabel("User credentials: Key"), pathLabelConstraint);
+        container.add(new JLabel("User credentials - Access Key"), pathLabelConstraint);
 
         GridConstraints pathFieldConstraint = new GridConstraints();
         pathFieldConstraint.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
@@ -147,7 +168,7 @@ public class HookConfigurable implements Configurable {
         pathLabelConstraint2.setColumn(0);
         pathLabelConstraint2.setFill(GridConstraints.FILL_HORIZONTAL);
         pathLabelConstraint2.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
-        container.add(new JLabel("User credentials: Secret   "), pathLabelConstraint2);
+        container.add(new JLabel("User credentials - Secret    "), pathLabelConstraint2);
 
         GridConstraints pathFieldConstraint2 = new GridConstraints();
         pathFieldConstraint2.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
@@ -159,9 +180,43 @@ public class HookConfigurable implements Configurable {
         container.add(userSecret, pathFieldConstraint2);
 
 
+        GridConstraints pathLabelConstraint3 = new GridConstraints();
+        pathLabelConstraint3.setRow(5);
+        pathLabelConstraint3.setColumn(0);
+        pathLabelConstraint3.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathLabelConstraint3.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(new JLabel("Disable SSL certificate verification"), pathLabelConstraint3);
+
+        GridConstraints pathFieldConstraint3 = new GridConstraints();
+        pathFieldConstraint3.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
+        pathFieldConstraint3.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathFieldConstraint3.setAnchor(GridConstraints.ANCHOR_WEST);
+        pathFieldConstraint3.setRow(5);
+        pathFieldConstraint3.setColumn(1);
+        pathFieldConstraint3.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(userDisableSSLVerify, pathFieldConstraint3);
+
+
+        GridConstraints pathLabelConstraint4 = new GridConstraints();
+        pathLabelConstraint4.setRow(6);
+        pathLabelConstraint4.setColumn(0);
+        pathLabelConstraint4.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathLabelConstraint4.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(new JLabel("Disable local-machine GIT detection"), pathLabelConstraint4);
+
+        GridConstraints pathFieldConstraint4 = new GridConstraints();
+        pathFieldConstraint4.setHSizePolicy(GridConstraints.SIZEPOLICY_WANT_GROW);
+        pathFieldConstraint4.setFill(GridConstraints.FILL_HORIZONTAL);
+        pathFieldConstraint4.setAnchor(GridConstraints.ANCHOR_WEST);
+        pathFieldConstraint4.setRow(6);
+        pathFieldConstraint4.setColumn(1);
+        pathFieldConstraint4.setVSizePolicy(GridConstraints.SIZEPOLICY_CAN_SHRINK);
+        container.add(userDisableGIT, pathFieldConstraint4);
+
+
         JPanel spacer = new JPanel();
         GridConstraints spacerConstraints = new GridConstraints();
-        spacerConstraints.setRow(5);
+        spacerConstraints.setRow(7);
         spacerConstraints.setFill(GridConstraints.FILL_BOTH);
         container.add(spacer, spacerConstraints);
 
@@ -190,10 +245,20 @@ public class HookConfigurable implements Configurable {
             return true;
         }
 
+        if (storedDisableVerify == null) {
+            return true;
+        }
+
+        if (storedDisableGit == null) {
+            return true;
+        }
+
         return !storedKey.equals(userKey.getText()) || !storedSecret.equals(userSecret.getText())
                 || !storedAPI.equals(userAPI.getText())
                 || !storedWEB.equals(userWEB.getText())
-                || !storedFILES.equals(userFILES.getText());
+                || !storedFILES.equals(userFILES.getText())
+                || !storedDisableVerify.equals(userDisableSSLVerify.isSelected())
+                || !storedDisableGit.equals(userDisableGIT.isSelected());
     }
 
     @Override
@@ -203,6 +268,8 @@ public class HookConfigurable implements Configurable {
         storedAPI = fixHost(userAPI.getText().trim());
         storedWEB = fixHost(userWEB.getText().trim());
         storedFILES = fixHost(userFILES.getText().trim());
+        storedDisableVerify = userDisableSSLVerify.isSelected();
+        storedDisableGit = userDisableGIT.isSelected();
 
         PropertiesComponent properties = PropertiesComponent.getInstance(project);
         properties.setValue(PATH_API, storedAPI);
@@ -210,6 +277,8 @@ public class HookConfigurable implements Configurable {
         properties.setValue(PATH_FILES, storedFILES);
         properties.setValue(PATH_KEY, storedKey);
         properties.setValue(PATH_SECRET, storedSecret);
+        properties.setValue(PATH_DISABLE_VERIFY, storedDisableVerify ? "true" : "false");
+        properties.setValue(PATH_DISABLE_GIT, storedDisableGit ? "true" : "false");
     }
 
     @Override
@@ -229,6 +298,12 @@ public class HookConfigurable implements Configurable {
         if (userSecret != null) {
             userSecret.setText(storedSecret);
         }
+        if (userDisableSSLVerify != null) {
+            userDisableSSLVerify.setSelected(storedDisableVerify);
+        }
+        if (userDisableGIT != null) {
+            userDisableGIT.setSelected(storedDisableGit);
+        }
     }
 
     @Override
@@ -238,6 +313,8 @@ public class HookConfigurable implements Configurable {
         userAPI = null;
         userWEB = null;
         userFILES = null;
+        userDisableSSLVerify = null;
+        userDisableGIT = null;
     }
 
     static String fixHost(String host) {
@@ -279,5 +356,19 @@ public class HookConfigurable implements Configurable {
             loadFromProperties(project);
         }
         return storedFILES;
+    }
+
+    static Boolean getDisableVerify(Project project) {
+        if (storedDisableVerify==null && project!=null){
+            loadFromProperties(project);
+        }
+        return storedDisableVerify != null && storedDisableVerify;
+    }
+
+    static Boolean getDisableGit(Project project) {
+        if (storedDisableGit==null && project!=null){
+            loadFromProperties(project);
+        }
+        return storedDisableGit != null && storedDisableGit;
     }
 }

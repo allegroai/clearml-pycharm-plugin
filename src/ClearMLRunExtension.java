@@ -19,15 +19,17 @@ import git4idea.config.GitVcsApplicationSettings;
 // import com.jetbrains.python.debugger.PyDebugRunner;
 import com.jetbrains.python.run.AbstractPythonRunConfiguration;
 // import com.jetbrains.python.run.PythonCommandLineState;
-// import com.jetbrains.python.run.PythonRunConfiguration;
 import com.jetbrains.python.run.PythonRunConfigurationExtension;
 
+
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import java.util.Map;
 
 public class ClearMLRunExtension extends PythonRunConfigurationExtension {
     private Project project = null;
@@ -55,6 +57,7 @@ public class ClearMLRunExtension extends PythonRunConfigurationExtension {
     @Override
     public boolean isApplicableFor(@NotNull AbstractPythonRunConfiguration configuration) {
         return true;
+
     }
 
     @Override
@@ -77,6 +80,12 @@ public class ClearMLRunExtension extends PythonRunConfigurationExtension {
             cmdLine.withEnvironment("CLEARML_WEB_HOST", HookConfigurable.getStoredWEB(project));
         if (HookConfigurable.getStoredFILES(project) != null && !HookConfigurable.getStoredFILES(project).isEmpty())
             cmdLine.withEnvironment("CLEARML_FILES_HOST", HookConfigurable.getStoredFILES(project));
+        if (HookConfigurable.getDisableVerify(project))
+            cmdLine.withEnvironment("CLEARML_API_HOST_VERIFY_CERT", "0");
+
+        // if we do not need to check the git status, we can leave now
+        if (HookConfigurable.getDisableGit(project))
+            return;
 
         String git = null;
         // first try new API
@@ -228,13 +237,23 @@ public class ClearMLRunExtension extends PythonRunConfigurationExtension {
     }
 
     private void openWarning(final String title, final String message, final int timeout) {
-        JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(
-                "ClearML " + title + ": " + message, MessageType.WARNING, null
-        ).setFadeoutTime(timeout)
-                .createBalloon().show(
-                RelativePoint.getNorthWestOf(WindowManager.getInstance().getStatusBar(project).getComponent()),
-                Balloon.Position.atRight
-        );
+        try {
+            JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(
+                            "ClearML " + title + ": " + message, MessageType.WARNING, null
+                    ).setFadeoutTime(timeout)
+                    .createBalloon().show(
+                            RelativePoint.getNorthWestOf(WindowManager.getInstance().getStatusBar(project).getComponent()),
+                            Balloon.Position.atRight
+                    );
+        }
+        catch (Throwable t){
+            JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(
+                            "ClearML " + title + ": " + message, MessageType.WARNING, null
+                    ).setFadeoutTime(timeout)
+                    .createBalloon().show(
+                            RelativePoint.fromScreen(new Point(0,0)),
+                            Balloon.Position.below);
+        }
     }
 
     private void openError(final String title, final String message) {
