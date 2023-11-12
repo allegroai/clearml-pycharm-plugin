@@ -7,6 +7,7 @@ import com.jetbrains.python.run.PythonExecution;
 import com.jetbrains.python.run.PythonRunParams;
 import com.jetbrains.python.run.target.HelpersAwareTargetEnvironmentRequest;
 import com.jetbrains.python.run.target.PythonCommandLineTargetEnvironmentProvider;
+import git4idea.config.GitExecutableManager;
 import git4idea.config.GitVcsApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,6 +48,15 @@ public class ClearMLPycharmEnvironmentProvider implements PythonCommandLineTarge
         }
 
         if (git == null) {
+            try {
+                git = GitExecutableManager.getInstance().getPathToGit();
+            }
+            catch (Throwable t){
+            }
+        }
+
+        if (git == null) {
+            openWarning("GIT error", "Could not locate GIT executable", 5000);
             // no git
             return;
         }
