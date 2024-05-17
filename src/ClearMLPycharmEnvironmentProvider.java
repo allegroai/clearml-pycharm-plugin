@@ -91,11 +91,13 @@ public class ClearMLPycharmEnvironmentProvider implements PythonCommandLineTarge
             } catch (Throwable t) {
                 // We cannot resolve it, assume same folder.
             }
-            pythonExecution.addEnvironmentVariable("CLEARML_VCS_ROOT", relRool);
+            // if running on Windows we have to replace \\ with /
+            pythonExecution.addEnvironmentVariable("CLEARML_VCS_ROOT", relRool.replace("\\", "/"));
 
             try {
                 String workDir = Paths.get(gitRoot).relativize(Paths.get(pythonRunParams.getWorkingDirectory())).toString();
-                pythonExecution.addEnvironmentVariable("CLEARML_VCS_WORK_DIR", workDir);
+                // if running on Windows we have to replace \\ with /
+                pythonExecution.addEnvironmentVariable("CLEARML_VCS_WORK_DIR", workDir.replace("\\", "/"));
             } catch (Throwable t) {
                 // We cannot resolve it, assume same folder.
             }

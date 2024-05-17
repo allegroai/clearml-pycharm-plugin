@@ -1,7 +1,7 @@
 <idea-plugin url="https://github.com/allegroai/clearml-pycharm-plugin">
   <id>com.clearml.plugin</id>
   <name>ClearML</name>
-  <version>1.1.1</version>
+  <version>1.2.0</version>
   <vendor url="https://clear.ml" email="support@clear.ml">clear.ml</vendor>
 
   <description><![CDATA[
@@ -26,9 +26,10 @@
       <li> 1.0.1 - Fix no git repository detection</li>
       <li> 1.0.2 - Fix partial remote sync causing incorrect working directory (requires clearml>=1.1.5)</li>
       <li> 1.1.0 - Add Pycharm 2022 Support
-                  Add disable SSL certificate verification option<
+                  Add disable SSL certificate verification option
                   Add disable local git detection (run git detection in remote session instead of local session)</li>
-      <li> 1.1.1 - Fix Pycharm 2023.2 Git Support
+      <li> 1.1.1 - Fix Pycharm 2023.2 Git Support</li>
+      <li> 1.2.0 - Fix Windows support for remote SSH Pycharm working dir detection (requires clearml>=1.16.1)</li>
       </ul>
       (c) clear.ml
     ]]>
